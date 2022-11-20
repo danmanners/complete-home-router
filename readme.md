@@ -40,7 +40,7 @@ Assuming you're using the same Intel hardware (or similar) that I am, you'll nee
 GRUB_CMDLINE_LINUX_DEFAULT="intel_iommu=on"
 ```
 
-Reboot your system and we're good to continue.
+Make sure to run `update-grub`, then reboot your system and we're good to continue.
 
 ## Setting up the Virtual Machine
 
