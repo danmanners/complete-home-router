@@ -1,0 +1,20 @@
+network:
+  version: 2
+  renderer: networkd
+  ethernets:
+    # Homelab Bridge Interface
+    homelab1:
+      optional: true
+      addresses:
+      - "10.4.0.2/23"
+      nameservers:
+        addresses:
+        - 10.4.0.1
+    homelabbr:
+      optional: true
+  bridges:
+    # Homelab Bridge Interface
+    homelab:
+      interfaces:
+      - homelabbr
+      - enp4s0

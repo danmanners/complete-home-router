@@ -3,3 +3,9 @@ Name=veth1
 Kind=veth
 [Peer]
 Name=vethbr
+
+[Homelab]
+Name=homelab1
+Kind=veth
+[HomelabPeer]
+Name=homelabbr

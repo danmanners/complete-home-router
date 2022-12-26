@@ -2,6 +2,9 @@ network:
   version: 2
   renderer: networkd
   ethernets:
+# We want to add 'optional: true' to each of the interfaces.
+# Otherwise, the system will take two additional minutes to
+# boot, and that's just annoying.
     enp1s0:
       optional: true
       dhcp4: true
@@ -20,20 +23,3 @@ network:
     enp6s0:
       optional: true
       dhcp4: false
-    veth1:
-      optional: true
-      addresses:
-      - "10.3.0.2/24"
-      nameservers:
-        addresses:
-        - 10.3.0.1
-      routes:
-      - to: "default"
-        via: "10.3.0.1"
-    vethbr:
-      optional: true
-  bridges:
-    routeros:
-      interfaces:
-      - vethbr
-      - enp5s0

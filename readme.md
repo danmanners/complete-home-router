@@ -8,11 +8,20 @@ I wanted to run my router _and_ Pi-hole on a single host. I purchased the [Intel
 
 ## General Networking Architecture
 
-I'm using PCIe passthrough on eth5 (`enp6s0`) for the OPNSense VM on the WAN interface, then passing the LAN interface to a network bridge (`routeros`), using a `veth` bridge (`veth1` and `vethbr`) to join to the local `routeros` network bridge, with a static IP on `veth1`, and eth4 (`enp5s0`) on the bridge to pass LAN back out to a physical interface. **ALL** of this is configured and managed via the [Netplan File](netplan.yaml) (stored at `/etc/netplan/00-installer-config.yaml`) and the [veth network configuration file](veth.netdev) (`/etc/systemd/network/01-veth.netdev`).
+I'm using PCIe passthrough on eth5 (`enp6s0`) for the OPNSense VM on the WAN interface, then passing the LAN interface to a network bridge (`routeros`), using a `veth` bridge (`veth1` and `vethbr`) to join to the local `routeros` network bridge, with a static IP on `veth1`, and eth4 (`enp5s0`) on the bridge to pass LAN back out to a physical interface. **ALL** of this is configured and managed via three Netplan Files:
+- [00-installer-config.yaml](00-installer-config.yaml) (stored at `/etc/netplan/00-installer-config.yaml`)
+- [01-wanbridge.yaml](01-wanbridge.yaml) (stored at `/etc/netplan/01-wanbridge.yaml`)
+- [02-homelab-network.yaml](02-homelab-network.yaml) (stored at `/etc/netplan/02-homelab-network.yaml`)
+
+Finally, you have the [veth network configuration file](veth.netdev) (located at `/etc/systemd/network/01-veth.netdev`) which includes both our LAN and Homelab network bridge `veth` interfaces.
 
 That's a mouthful, but it works. Check out this diagram; maybe it'll help.
 
 ![Networking](images/network-architecture.png)
+
+> *PLEASE NOTE* - This image _does not include_ my homelab network. This is virtually identical to the LAN Bridge, but on separate interfaces and connects physically to the `enp4s0` interface.
+
+Once you've put all of the files where they belong, reboot the host.
 
 ## Tools, Libraries, and Applications (oh my)
 
@@ -55,7 +64,7 @@ virt-install --name=OPNSense --description='Core Router' \
     --import --graphics=none 
 ```
 
-Then, through Cockpit (`https://hostip:9090`) you'll want to add a few other settings:
+Then, through Cockpit (`https://$hostip:9090`) you'll want to add a few other settings:
 
 1. In `Virtual Machines` > `OPNSense`, scroll down to `Host devices` and click `add`
 2. Switch to `PCI` and add the ethernet port you'll use for WAN. You can get this by running `lspci | grep Ethernet` on the server.
@@ -76,9 +85,11 @@ At the end, your Cockpit should look something like this:
 
 ## OPNSense Configuration
 
-If everything goes well, your OPNSense Router will be up and operational!
+If everything goes well, your OPNSense Router will be up and operational! You can now configure your WAN, LAN, and Homelab network interfaces.
 
 ![OPNSense Dashboard](images/opnsense-dashboard.png)
+
+> For backups to Google Drive, [follow the instructions on the OPNsense wiki](https://docs.opnsense.org/manual/how-tos/cloud_backup.html).
 
 ## Pi-Hole Installation and Configuration
 
