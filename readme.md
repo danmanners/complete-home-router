@@ -96,3 +96,7 @@ If everything goes well, your OPNSense Router will be up and operational! You ca
 While you could run Pi-Hole in a container, I'm not. Just run it from the `curl` instructions [off of their website](https://docs.pi-hole.net/main/basic-install/).
 
 Then, you can point Pi-Hole Upstream DNS to wherever you want, and use OPNSense to the IP of the Ubuntu 22.04 server.
+
+## Dynamic DNS Updating
+
+Check out the [repo I have on GitHub here](https://github.com/danmanners/route53-dyndns); it's a little Go application that runs as a service on the Linux host.
